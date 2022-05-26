@@ -4,6 +4,7 @@ html {
   }
   
   *, *:before, *:after {
+    font-family: 'Open Sans', sans-serif;
     box-sizing: inherit;
   }
   
@@ -20,4 +21,44 @@ html {
   img {
     max-width: 100%;
     height: auto;
+  }
+
+  body {
+    background-color: #edf2f4;
+  }
+
+  #header-container {
+    padding: 16px;
+    display: grid;
+    justify-items: center;
+    color: white;
+    background-color: #ef233c;
+  }
+
+  #header-logo {
+    font-size: 4rem;
+    font-weight: 700;
+  }
+
+
+  #game-board-container {
+    margin: auto;
+    padding: 16px;
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .game-square {
+    color: #474350;
+    font-size: 4rem;
+    font-weight: 900;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    align-self: stretch;
+    outline: 2px solid #ef233c;
   }
