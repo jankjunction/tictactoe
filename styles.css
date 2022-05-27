@@ -65,6 +65,7 @@ html {
 
   #game-stats-container {
     margin: auto;
+    text-align: center;
   }
 
   #game-status {

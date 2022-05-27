@@ -39,11 +39,11 @@ const gameState = (() => {
 
     const clearBoard = () => {
         gameState.board = ['', '', '', '', '', '',  '', '', ''];
-        events.emit('boardChange', board);
+        events.emit('boardChanged', gameState.board);
     };
 
     const playerCreator = (name, token) => {
-        return { name, token};
+        return {name, token};
     };
 
     const player1 = playerCreator('player1', 'X');
@@ -62,6 +62,7 @@ const gameState = (() => {
     const changeMarker = (index) => {
         board[index] = currentPlayer.token;
         events.emit('markerChanged', index);
+        console.log(currentPlayer.token)
     };
 
     const gameOver = () => {
@@ -94,6 +95,7 @@ const gameState = (() => {
 
     events.on('markerChanged', gameOver);
     events.on('markerChanged', playerChange);
+    events.on('clearBoard', clearBoard);
     
     return {
         board: board,
@@ -108,8 +110,14 @@ const domManipulation = (() => {
     let gameBoardDiv = document.querySelector('#game-board-container');
     let gameStatsDiv = document.querySelector('#game-stats-container');
     let gameSquareDivs = document.getElementsByClassName('game-square');
+    let resetBtn = document.getElementById('reset');
+
+    resetBtn.addEventListener('click', () => {
+        events.emit('clearBoard');
+    })
 
     const init = () => {
+        wipeHtml()
         renderHtml();
         markerListen();
         gameState.playerCreator();
@@ -150,26 +158,23 @@ const domManipulation = (() => {
                 let string = item.attributes.id.value;
                 index = string.charAt(string.length - 1);
                 gameState.changeMarker(index);
+                console.log('clicked');
             })
         })
     };
 
-    events.on('markerChanged', wipeHtml);
-    events.on('markerChanged', renderHtml);
-    events.on('markerChanged', markerListen);    
+    events.on('markerChanged', wipeHtml);    
     events.on('boardChanged', wipeHtml);
+    events.on('markerChanged', renderHtml);
     events.on('boardChanged', renderHtml);
+    events.on('markerChanged', markerListen);
+    events.on('boardChanged', markerListen);
     events.on('gameOver', gameStatus);
 
     return {
-        gameBoardDiv: gameBoardDiv,
-        gameSquareDivs: gameSquareDivs,
-        wipeHtml: wipeHtml,
-        renderHtml: renderHtml,
         init: init
     };
 
 })();
 
 domManipulation.init();
-
