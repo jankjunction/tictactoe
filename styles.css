@@ -62,3 +62,11 @@ html {
     align-self: stretch;
     outline: 2px solid #ef233c;
   }
+
+  #game-stats-container {
+    margin: auto;
+  }
+
+  #game-status {
+    text-align: center;
+  }
