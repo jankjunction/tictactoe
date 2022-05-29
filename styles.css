@@ -48,7 +48,7 @@ html {
     display: grid;
     margin: auto;
     width: 80%;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 4fr;
   }
 
   #game-stats-container {
@@ -61,6 +61,7 @@ html {
     gap: 16px;
     display: grid;
     font-size: 1.5rem;
+    justify-self: end;
   }
 
   #game-status {
