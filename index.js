@@ -29,7 +29,7 @@ const events = (function() {
     return {
         on: on,
         off: off,
-        emit: emit,
+        emit: emit
     };
 
 })();
@@ -104,7 +104,8 @@ const gameState = (() => {
     events.on('clearBoard', clearBoard);
     events.on('clearBoard', playerChange);
     events.on('gameOver', playerChange);
-    events.on('setPlayers', initPlayers)
+    events.on('setPlayers', initPlayers);
+    events.on('computerPlay', changeMarker);
     
     return {
         board: board,
@@ -195,9 +196,25 @@ const domManipulation = (() => {
     events.on('gameOver', gameUpdate);
 
     return {
-        init: init
+        init: init,
     };
 
 })();
 
+const computerPlay = (() => {
+
+    const computerPlayRandom = () => {
+        let compPlacementRandom = Math.random();
+        if (gameState.board[compPlacementRandom] != '') {
+            events.emit('computerMove', compPlacementRandom);
+        } else {
+        computerPlayRandom();
+        }
+    };
+
+    return {
+        computerPlayRandom: computerPlayRandom
+    }
+})();
+computerPlay.compPlacementRandom;
 domManipulation.init();

@@ -24,11 +24,12 @@ html {
   }
 
   input:focus, textarea:focus, select:focus{
-    outline: none;
+    border: none;
   }
 
   body {
     background-color: #edf2f4;
+    display: grid;
   }
 
   #header-container {
@@ -42,13 +43,14 @@ html {
   #header-logo {
     font-size: 4rem;
     font-weight: 700;
+    justify-self: center;
   }
 
   #game-container {
     display: grid;
     margin: auto;
-    width: 80%;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: min-content min-content;
+    justify-items: center;
   }
 
   #game-stats-container {
@@ -77,6 +79,7 @@ html {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 8px;
+    justify-self: start;
   }
 
   .game-square {
@@ -87,9 +90,44 @@ html {
     align-items: center;
     text-align: center;
     align-self: stretch;
-    outline: 2px solid #ef233c;
+    border: 2px solid #ef233c;
+  }
+
+  #game-square-0 {
+    border-top: 0px solid #ef233c;
+    border-left: 0px solid #ef233c;
+  }
+
+  #game-square-1 {
+    border-top: 0px solid #ef233c;
+  }
+
+  #game-square-2 {
+    border-top: 0px solid #ef233c;
+    border-right: 0px solid #ef233c;
+  } 
+  
+  #game-square-3 {
+    border-left: 0px solid #ef233c;
+  }
+
+  #game-square-5 {
+    border-right: 0px solid #ef233c;
+  }
+
+  #game-square-6 {
+    border-bottom: 0px solid #ef233c;
+    border-left: 0px solid #ef233c;
+  }
+
+  #game-square-7 {
+    border-bottom: 0px solid #ef233c;
+  }
+  #game-square-8 {
+    border-bottom: 0px solid #ef233c;
+    border-right: 0px solid #ef233c;
   }
 
   .game-square:hover {
-    outline: 8px solid #ef233c;
+    outline: 10px solid #ef233c;
   }
