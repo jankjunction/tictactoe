@@ -40,16 +40,23 @@ const gameState = (() => {
     const clearBoard = () => {
         gameState.board = ['', '', '', '', '', '',  '', '', ''];
         events.emit('boardChanged', gameState.board);
+        events.emit('gameOver', {status: 'New Game', currentPlayer: player1});
     };
 
     const playerCreator = (name, token) => {
         return {name, token};
     };
 
-    const player1 = playerCreator('player1', 'X');
-    const player2 = playerCreator('player2', 'O');
+    let player1 = playerCreator('player1', 'X');
+    let player2 = playerCreator('player2', 'O');
 
     let currentPlayer = player1;
+    
+    const initPlayers = (playerObject) => {
+        player1 = playerCreator(playerObject[0], playerObject[1]);
+        player2 = playerCreator(playerObject[2], playerObject[3]);
+        currentPlayer = player1;
+    };
 
     const playerChange = () => {
         if (currentPlayer === player1) {
@@ -60,9 +67,8 @@ const gameState = (() => {
     };
 
     const changeMarker = (index) => {
-        board[index] = currentPlayer.token;
+        gameState.board[index] = currentPlayer.token;
         events.emit('markerChanged', index);
-        console.log(currentPlayer.token)
     };
 
     const gameOver = () => {
@@ -96,6 +102,9 @@ const gameState = (() => {
     events.on('markerChanged', gameOver);
     events.on('markerChanged', playerChange);
     events.on('clearBoard', clearBoard);
+    events.on('clearBoard', playerChange);
+    events.on('gameOver', playerChange);
+    events.on('setPlayers', initPlayers)
     
     return {
         board: board,
@@ -110,11 +119,26 @@ const domManipulation = (() => {
     let gameBoardDiv = document.querySelector('#game-board-container');
     let gameStatsDiv = document.querySelector('#game-stats-container');
     let gameSquareDivs = document.getElementsByClassName('game-square');
-    let resetBtn = document.getElementById('reset');
+    let newGameBtn = document.getElementById('reset');
+    let gameStatus = document.createElement('div');
+    let playerSubmitBtn = document.getElementById('submit');
 
-    resetBtn.addEventListener('click', () => {
+    playerSubmitBtn.addEventListener('click', () => {
+        let player1Input = document.getElementById('player1').value;
+        let player2Input = document.getElementById('player2').value;
+        let player1InputToken = document.getElementById('player1token').value;
+        let player2InputToken = document.getElementById('player2token').value;
+
+        if (player1Input === '' && player2Input === '' && player1InputToken === '' && player2InputToken === '') {
+            events.emit('setPlayers', ['player1', 'X', 'player2', 'O']);
+        } else {
+        events.emit('setPlayers', [player1Input, player1InputToken, player2Input, player2InputToken]);
+        }
+    });
+
+    newGameBtn.addEventListener('click', () => {
         events.emit('clearBoard');
-    })
+    });
 
     const init = () => {
         wipeHtml()
@@ -123,13 +147,13 @@ const domManipulation = (() => {
         gameState.playerCreator();
     };
 
-    const gameStatus = (data) => {
-        let gameStatus = document.createElement('div');
-        gameStatus.setAttribute('id', 'game-status');
+    const gameUpdate = (data) => {
         if (data.status === 'Draw') {
             gameStatus.textContent = `${data.status}`
+        } else if (data.status === 'New Game') {
+            gameStatus.textContent = ``
         } else {
-            gameStatus.textContent = `${data.status}  ${data.currentPlayer.name} Wins`;
+            gameStatus.textContent = `${data.currentPlayer.name} Wins!`;
         }
         gameStatsDiv.appendChild(gameStatus);
     };
@@ -158,7 +182,6 @@ const domManipulation = (() => {
                 let string = item.attributes.id.value;
                 index = string.charAt(string.length - 1);
                 gameState.changeMarker(index);
-                console.log('clicked');
             })
         })
     };
@@ -169,7 +192,7 @@ const domManipulation = (() => {
     events.on('boardChanged', renderHtml);
     events.on('markerChanged', markerListen);
     events.on('boardChanged', markerListen);
-    events.on('gameOver', gameStatus);
+    events.on('gameOver', gameUpdate);
 
     return {
         init: init
