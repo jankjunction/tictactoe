@@ -64,6 +64,7 @@ const gameState = (() => {
         } else {
             currentPlayer = player1;
         }
+        events.emit('player', currentPlayer);
     };
 
     const changeMarker = (index) => {
@@ -105,13 +106,14 @@ const gameState = (() => {
     events.on('clearBoard', playerChange);
     events.on('gameOver', playerChange);
     events.on('setPlayers', initPlayers);
-    events.on('computerPlay', changeMarker);
+    events.on('computerMove', changeMarker);
     
     return {
         board: board,
         clearBoard: clearBoard,
         changeMarker: changeMarker,
         playerCreator: playerCreator,
+        player2: player2
     }
 })();
 
@@ -123,6 +125,11 @@ const domManipulation = (() => {
     let newGameBtn = document.getElementById('reset');
     let gameStatus = document.createElement('div');
     let playerSubmitBtn = document.getElementById('submit');
+    let computerPlayBtn = document.getElementById('computer-play');
+
+    computerPlayBtn.addEventListener('click', () => {
+        computerPlay.computerPlayRandom(gameState.player2);
+    })
 
     playerSubmitBtn.addEventListener('click', () => {
         let player1Input = document.getElementById('player1').value;
@@ -203,18 +210,29 @@ const domManipulation = (() => {
 
 const computerPlay = (() => {
 
-    const computerPlayRandom = () => {
-        let compPlacementRandom = Math.random();
-        if (gameState.board[compPlacementRandom] != '') {
-            events.emit('computerMove', compPlacementRandom);
+    const computerPlayRandom = (playerObj) => {
+        let compPlacementRandom = Math.floor(Math.random() * 9);
+        if (gameState.board.indexOf('') === -1) {
+            return;
         } else {
-        computerPlayRandom();
+            if (playerObj.name === gameState.player2.name) {
+                console.log(gameState.board);
+                if (gameState.board[compPlacementRandom] === '') {
+                    events.emit('computerMove', compPlacementRandom);
+                } else {
+                computerPlayRandom(playerObj);
+                }
+            } else {
+                return;
+            };
         }
     };
+
+    // events.on('player', computerPlayRandom);
 
     return {
         computerPlayRandom: computerPlayRandom
     }
 })();
-computerPlay.compPlacementRandom;
+
 domManipulation.init();
